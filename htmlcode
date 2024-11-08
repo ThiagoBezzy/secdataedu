@@ -1,0 +1,1240 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Simulação de Proteção de Dados</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Estilos CSS -->
+    <style>
+        /* Reset básico */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+ 
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            color: #333;
+            display: flex;
+            height: 100vh;
+            flex-direction: row;
+            overflow: hidden;
+        }
+ 
+        /* Sidebar Esquerda - Tabela do Servidor */
+        .sidebar-left {
+            flex: 0 0 25%; /* Aumentado para 25% para mais espaço */
+            background-color: #ffffff;
+            border-right: 1px solid #ddd;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            overflow: hidden; /* Evita rolagem desnecessária */
+        }
+        .sidebar-left h3 {
+            color: #333;
+            margin-bottom: 10px;
+        }
+        #server-table {
+            width: 100%;
+            border-collapse: collapse;
+            white-space: nowrap; /* Evita quebra de linha nas células */
+        }
+        #server-table th, #server-table td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: center;
+        }
+        #server-table th {
+            background-color: #f2f2f2;
+            color: #333;
+        }
+        /* Torna a tabela rolável verticalmente */
+        .table-container {
+            flex-grow: 1;
+            overflow: auto;
+            max-height: 100%; /* Garante que a tabela ocupe todo o espaço disponível */
+        }
+ 
+        /* Main Content - Tutorial e Log */
+        .main-content {
+            flex: 1; /* Ocupa o espaço restante */
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            overflow: hidden; /* Evita rolagem no main-content */
+        }
+        h1 {
+            color: #444;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        /* Diagrama de Fluxo de Dados */
+        .flowchart {
+            flex: 0 0 100px; /* Altura reduzida para o diagrama */
+            width: 100%;
+            text-align: center;
+        }
+        .flowchart svg {
+            width: 100%;
+            height: 100px; /* Altura fixa menor */
+        }
+        /* Container para as Etapas do Tutorial */
+        .steps-container {
+            flex: 1; /* Ocupa todo o espaço vertical restante */
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            overflow-y: auto; /* Permite rolagem interna se necessário */
+        }
+        /* Etapas do Tutorial */
+        .step {
+            display: none;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .step.active {
+            display: block;
+            animation: fadeIn 0.5s;
+        }
+        .step h2 {
+            color: #333;
+            margin-bottom: 10px;
+        }
+        .step p {
+            margin-bottom: 15px;
+        }
+        .step form {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        .step label {
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        .step input {
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 1em;
+            transition: border-color 0.3s;
+            width: 100%;
+        }
+        .step input:focus {
+            border-color: #2196F3;
+            outline: none;
+        }
+        .step button.action-btn {
+            padding: 10px;
+            font-size: 1em;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            background-color: #4CAF50;
+            color: white;
+            transition: background-color 0.3s;
+        }
+        .step button.action-btn:hover {
+            background-color: #45a049;
+        }
+        .navigation-buttons {
+            display: flex;
+            justify-content: space-between;
+            gap: 10px;
+            margin-top: 20px;
+        }
+        .navigation-buttons button {
+            padding: 10px 20px;
+            font-size: 1em;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            flex: 1;
+            max-width: 150px;
+        }
+        .navigation-buttons .next-btn {
+            background-color: #4CAF50;
+            color: white;
+        }
+        .navigation-buttons .next-btn:hover {
+            background-color: #45a049;
+        }
+        .navigation-buttons .prev-btn {
+            background-color: #f1f1f1;
+            color: #333;
+        }
+        .navigation-buttons .prev-btn:hover {
+            background-color: #ddd;
+        }
+        .navigation-buttons .done-btn {
+            background-color: #2196F3;
+            color: white;
+        }
+        .navigation-buttons .done-btn:hover {
+            background-color: #0b7dda;
+        }
+        /* Log */
+        .log-container {
+            background-color: #fff;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            height: 250px; /* Mantido conforme solicitado */
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        .log-container h3 {
+            color: #333;
+            margin-bottom: 10px;
+        }
+        .log-container button.action-btn {
+            align-self: flex-end;
+            padding: 10px 20px;
+            font-size: 1em;
+            background-color: #f44336;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            color: white;
+            transition: background-color 0.3s;
+        }
+        .log-container button.action-btn:hover {
+            background-color: #da190b;
+        }
+        #log {
+            flex-grow: 1;
+            overflow-y: auto;
+            background-color: #f9f9f9;
+            padding: 10px;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+        }
+        #log p {
+            margin: 5px 0;
+        }
+        /* Sidebar Direita - Usuários Logados */
+        .sidebar-right {
+            flex: 0 0 25%; /* Aumentado para 25% para mais espaço */
+            background-color: #ffffff;
+            border-left: 1px solid #ddd;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            overflow: hidden; /* Evita rolagem desnecessária */
+        }
+        .sidebar-right h3 {
+            color: #333;
+            margin-bottom: 10px;
+        }
+        #logged-users {
+            flex-grow: 1; /* Ocupa todo o espaço vertical disponível */
+            background-color: #fff;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            overflow: auto; /* Permite rolagem interna quando necessário */
+        }
+        #logged-users p {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 5px;
+            margin: 10px 0;
+        }
+        .status-indicator {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            display: inline-block;
+        }
+        .status-logged-in {
+            background-color: #4CAF50;
+        }
+        .status-logged-out {
+            background-color: #f44336;
+        }
+        .timer {
+            font-size: 0.9em;
+            color: #555;
+        }
+        .sidebar-right button.action-btn {
+            padding: 10px 20px;
+            font-size: 1em;
+            background-color: #f44336;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            color: white;
+            transition: background-color 0.3s;
+            margin-top: 10px;
+        }
+        .sidebar-right button.action-btn:hover {
+            background-color: #da190b;
+        }
+        /* Botões de Navegação Flutuantes com Ícones */
+        .floating-nav {
+            position: fixed;
+            top: 50%;
+            right: 20px;
+            transform: translateY(-50%);
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            z-index: 1000;
+        }
+        .floating-nav button {
+            background-color: #2196F3;
+            border: none;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            color: white;
+            font-size: 24px;
+            cursor: pointer;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            transition: background-color 0.3s, transform 0.3s;
+        }
+        .floating-nav button:hover {
+            background-color: #1976D2;
+            transform: scale(1.1);
+        }
+ 
+        /* Notificações Pop-up */
+        .notification {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: #4CAF50;
+            color: white;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            opacity: 0;
+            transition: opacity 0.5s ease-in-out;
+            z-index: 1000;
+            max-width: 300px;
+            word-wrap: break-word;
+        }
+        .notification.show {
+            opacity: 1;
+        }
+        .notification.error {
+            background-color: #f44336;
+        }
+        .notification.info {
+            background-color: #2196F3;
+        }
+        /* Animações */
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        .highlight {
+            stroke: #FF5722;
+            stroke-width: 4;
+            fill: none;
+            transition: stroke 0.3s, stroke-width 0.3s;
+        }
+        /* Responsividade */
+        @media (max-width: 1200px) {
+            body {
+                flex-direction: column;
+            }
+            .sidebar-left, .sidebar-right, .main-content {
+                flex: 0 0 auto;
+                width: 100%;
+                height: auto;
+            }
+            .flowchart svg {
+                height: 150px;
+            }
+            .sidebar-left, .sidebar-right {
+                flex: 0 0 30%; /* Ajuste para dispositivos intermediários */
+            }
+        }
+        @media (max-width: 768px) {
+            .flowchart svg {
+                height: 100px;
+            }
+            /* Campos de entrada ocupando toda a largura */
+            .step input {
+                padding: 15px;
+                font-size: 1em;
+            }
+            /* Navegação em coluna */
+            .navigation-buttons {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            .navigation-buttons button {
+                width: 100%;
+            }
+            .sidebar-right button.action-btn {
+                width: 100%;
+                margin-left: 0;
+            }
+            /* Botões de navegação espaçados */
+            .navigation-buttons {
+                gap: 10px;
+            }
+            /* Ajuste das sidebars para dispositivos móveis */
+            .sidebar-left, .sidebar-right {
+                flex: 0 0 40%; /* Mais espaço para sidebars */
+            }
+            /* Ajustar botões flutuantes para dispositivos móveis */
+            .floating-nav {
+                right: 10px;
+            }
+            .floating-nav button {
+                width: 40px;
+                height: 40px;
+                font-size: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Sidebar Esquerda - Tabela do Servidor -->
+    <div class="sidebar-left">
+        <h3>Tabela do Servidor</h3>
+        <div class="table-container">
+            <table id="server-table">
+                <thead>
+                    <tr>
+                        <th>Usuário</th>
+                        <th>Hash de Senha</th>
+                        <th>Salt</th>
+                        <th>IV</th>
+                        <th>Dados Criptografados</th>
+                        <th>CED Criptografada</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td colspan="6" style="text-align: center;">Nenhum usuário registrado.</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+ 
+    <!-- Main Content - Tutorial e Log -->
+    <div class="main-content">
+        <h1>Simulação de Proteção de Dados</h1>
+ 
+        <!-- Diagrama de Fluxo de Dados -->
+        <div class="flowchart">
+            <svg viewBox="0 0 800 200" id="data-flow-diagram">
+                <!-- Frontend -->
+                <rect x="50" y="50" width="200" height="100" fill="#e3f2fd" stroke="#2196F3" stroke-width="2" rx="10"/>
+                <text x="150" y="80" text-anchor="middle" font-size="16" fill="#0d47a1">Frontend</text>
+                <!-- Backend -->
+                <rect x="550" y="50" width="200" height="100" fill="#fff3e0" stroke="#ff9800" stroke-width="2" rx="10"/>
+                <text x="650" y="80" text-anchor="middle" font-size="16" fill="#e65100">Backend</text>
+                <!-- Arrow -->
+                <line x1="250" y1="100" x2="550" y2="100" stroke="#757575" stroke-width="2" marker-end="url(#arrowhead)" id="arrow-flow"/>
+                <defs>
+                    <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="0" refY="3.5" orient="auto">
+                        <polygon points="0 0, 10 3.5, 0 7" fill="#757575"/>
+                    </marker>
+                </defs>
+                <!-- Label -->
+                <text x="400" y="90" text-anchor="middle" font-size="14" fill="#757575">Fluxo de Dados</text>
+            </svg>
+        </div>
+ 
+        <!-- Container para as Etapas do Tutorial -->
+        <div class="steps-container">
+            <!-- Etapa 1: Definir Chave Mestra -->
+            <div id="step-1" class="step active">
+                <h2>1. Definir Chave Mestra</h2>
+                <p>Comece definindo uma chave mestra que será usada para proteger os dados dos usuários.</p>
+                <form onsubmit="event.preventDefault(); setMasterKey();">
+                    <label for="master-key">Chave Mestra:</label>
+                    <input type="password" id="master-key" placeholder="Digite a chave mestra" oninput="validateStep1()" required>
+                    <button type="submit" class="action-btn">Definir Chave Mestra</button>
+                </form>
+                <p id="master-key-status"></p>
+                <div class="navigation-buttons">
+                    <button class="next-btn" onclick="nextStep(1)" disabled id="next-btn-1">Próximo</button>
+                </div>
+            </div>
+ 
+            <!-- Etapa 2: Registrar Usuário e Enviar Dados -->
+            <div id="step-2" class="step">
+                <h2>2. Registrar Usuário e Enviar Dados</h2>
+                <p>Registre um novo usuário e envie dados para serem criptografados.</p>
+                <form onsubmit="event.preventDefault(); registerUser();">
+                    <label for="reg-username">Nome de Usuário:</label>
+                    <input type="text" id="reg-username" placeholder="Digite o nome de usuário" oninput="validateStep2()" required>
+ 
+                    <label for="reg-password">Senha do Usuário:</label>
+                    <input type="password" id="reg-password" placeholder="Digite a senha do usuário" oninput="validateStep2()" required>
+ 
+                    <label for="user-data">Dados para Criptografar:</label>
+                    <input type="text" id="user-data" placeholder="Digite a string para criptografar" oninput="validateStep2()" required>
+ 
+                    <button type="submit" class="action-btn">Registrar Usuário</button>
+                </form>
+                <p id="register-status"></p>
+                <div class="navigation-buttons">
+                    <button class="prev-btn" onclick="prevStep(2)">Anterior</button>
+                    <button class="next-btn" onclick="nextStep(2)" disabled id="next-btn-2">Próximo</button>
+                </div>
+            </div>
+ 
+            <!-- Etapa 3: Login de Usuário -->
+            <div id="step-3" class="step">
+                <h2>3. Login de Usuário</h2>
+                <p>Faça login para gerar um token temporário e acessar seus dados criptografados.</p>
+                <form onsubmit="event.preventDefault(); loginUser();">
+                    <label for="login-username">Nome de Usuário:</label>
+                    <input type="text" id="login-username" placeholder="Digite o nome de usuário" oninput="validateStep3()" required>
+ 
+                    <label for="login-password">Senha:</label>
+                    <input type="password" id="login-password" placeholder="Digite a senha" oninput="validateStep3()" required>
+ 
+                    <button type="submit" class="action-btn">Fazer Login</button>
+                </form>
+                <p id="login-status"></p>
+                <div class="navigation-buttons">
+                    <button class="prev-btn" onclick="prevStep(3)">Anterior</button>
+                    <button class="next-btn" onclick="nextStep(3)" disabled id="next-btn-3">Próximo</button>
+                </div>
+            </div>
+ 
+            <!-- Etapa 4: Controle de Rotação Automática da Chave Mestra -->
+            <div id="step-4" class="step">
+                <h2>4. Controle de Rotação Automática da Chave Mestra</h2>
+                <p>Configure a rotação automática da chave mestra para aumentar a segurança dos dados.</p>
+                <form onsubmit="event.preventDefault(); startAutoRotation();">
+                    <label for="rotation-interval">Tempo de Rotação (segundos):</label>
+                    <input type="number" id="rotation-interval" placeholder="Digite o tempo em segundos" oninput="validateStep4()" min="1" required>
+ 
+                    <button type="submit" class="action-btn">Configurar Rotação</button>
+                </form>
+                <p id="rotation-status"></p>
+                <div class="navigation-buttons">
+                    <button class="prev-btn" onclick="prevStep(4)">Anterior</button>
+                    <button class="done-btn" onclick="finishTutorial()" disabled id="done-btn">Finalizar</button>
+                </div>
+                <!-- Botão para Parar a Rotação Automática -->
+                <button class="action-btn" onclick="stopAutoRotation()" style="margin-top: 10px; background-color: #f44336;">
+                    Parar Rotação Automática
+                </button>
+            </div>
+        </div>
+ 
+        <!-- Caixa de Log -->
+        <div class="log-container">
+            <h3>Log de Atividades</h3>
+            <button class="action-btn" onclick="clearLog()">Limpar Logs</button>
+            <div id="log"></div>
+        </div>
+    </div>
+ 
+    <!-- Sidebar Direita - Usuários Logados -->
+    <div class="sidebar-right">
+        <h3>Usuários Logados</h3>
+        <div id="logged-users">
+            <p class="log-header">Nenhum usuário logado atualmente.</p>
+        </div>
+    </div>
+ 
+    <!-- Botões de Navegação Flutuantes com Ícones -->
+    <div class="floating-nav">
+        <button onclick="navigateTo('step-2')" title="Registrar Novo Usuário">👤</button>
+        <button onclick="navigateTo('step-3')" title="Login">🔒</button>
+        <button onclick="navigateTo('step-4')" title="Configurar Rotação">⚙️</button>
+        <button onclick="resetAll()" title="Reset Completo">🔄</button>
+    </div>
+ 
+    <!-- Notificação Pop-up -->
+    <div id="notification" class="notification"></div>
+ 
+    <!-- Scripts JavaScript -->
+    <script>
+        let currentStep = 1;
+        const totalSteps = 4;
+        let masterKey = null;
+        const userDB = {};
+        let autoRotationInterval = null;
+        const tokens = {};
+        const tokenExpiryInterval = 30 * 1000; // 30 segundos
+ 
+        /**
+         * Exibe uma notificação pop-up.
+         * @param {string} message - A mensagem da notificação.
+         * @param {string} type - Tipo da mensagem: 'success', 'error', 'info'.
+         */
+        function showNotification(message, type) {
+            const notification = document.getElementById('notification');
+            notification.textContent = message;
+            notification.className = `notification show ${type}`;
+            setTimeout(() => {
+                notification.className = 'notification';
+            }, 3000);
+        }
+ 
+        /**
+         * Adiciona uma mensagem ao log com timestamp e colorização.
+         * @param {string} message - A mensagem a ser adicionada.
+         * @param {string} type - Tipo da mensagem: 'success', 'error', 'info'.
+         */
+        function logMessage(message, type = 'info') {
+            const logDiv = document.getElementById('log');
+            const timestamp = new Date().toLocaleTimeString();
+            let color = '';
+            if (type === 'success') color = 'green';
+            else if (type === 'error') color = 'red';
+            else color = '#555';
+            logDiv.innerHTML += `<p style="color: ${color};"><strong>[${timestamp}]</strong> ${message}</p>`;
+            logDiv.scrollTop = logDiv.scrollHeight;
+ 
+            // Exibe notificação
+            showNotification(message, type);
+        }
+ 
+        /**
+         * Limpa o conteúdo do log.
+         */
+        function clearLog() {
+            document.getElementById('log').innerHTML = "";
+            logMessage("Logs limpos pelo usuário.", 'info');
+        }
+ 
+        /**
+         * Atualiza a lista de usuários logados.
+         */
+        function updateLoggedUsers() {
+            const loggedUsersDiv = document.getElementById('logged-users');
+            const users = Object.keys(tokens);
+            if (users.length === 0) {
+                loggedUsersDiv.innerHTML = '<p class="log-header">Nenhum usuário logado atualmente.</p>';
+            } else {
+                loggedUsersDiv.innerHTML = ''; // Limpa o conteúdo anterior
+                users.forEach(username => {
+                    const userToken = tokens[username];
+                    const isLoggedIn = userToken && Date.now() < userToken.expires;
+                    if (isLoggedIn) {
+                        const remaining = Math.round((userToken.expires - Date.now()) / 1000);
+                        const statusClass = 'status-logged-in';
+                        const decryptedData = userToken.data || 'Nenhum dado descriptografado.';
+                        loggedUsersDiv.innerHTML += `
+                            <p>
+                                <span class="status-indicator ${statusClass}"></span>
+                                <strong>${username}</strong>
+                                <span class="timer">Expira em: ${remaining}s</span>
+                                <br>
+                                <strong>Token:</strong> ${userToken.token}
+                                <br>
+                                <strong>Dados Descriptografados:</strong> ${decryptedData}
+                                <button class="action-btn" onclick="logoutUser('${username}')">Logout</button>
+                            </p>
+                        `;
+                    }
+                });
+            }
+        }
+ 
+        /**
+         * Atualiza a tabela simulada do servidor.
+         */
+        function updateServerTable() {
+            const tableBody = document.querySelector('#server-table tbody');
+            tableBody.innerHTML = ''; // Limpa a tabela
+ 
+            const users = Object.keys(userDB);
+            if (users.length === 0) {
+                tableBody.innerHTML = `
+                    <tr>
+                        <td colspan="6" style="text-align: center;">Nenhum usuário registrado.</td>
+                    </tr>
+                `;
+                return;
+            }
+ 
+            users.forEach(username => {
+                const user = userDB[username];
+                tableBody.innerHTML += `
+                    <tr>
+                        <td>${username}</td>
+                        <td>${user.passwordHash.join('')}</td>
+                        <td>${user.salt.join(',')}</td>
+                        <td>${user.iv.join(',')}</td>
+                        <td>${user.encryptedData.join(',')}</td>
+                        <td>${user.encryptedCED.join(',')}</td>
+                    </tr>
+                `;
+            });
+        }
+ 
+        /**
+         * Define a chave mestra a partir do input do usuário.
+         */
+        async function setMasterKey() {
+            const masterKeyInput = document.getElementById('master-key').value;
+            const statusElement = document.getElementById("master-key-status");
+            statusElement.className = ''; // Resetar classes
+ 
+            if (!masterKeyInput) {
+                logMessage("Erro: Chave mestra não fornecida.", 'error');
+                statusElement.textContent = "Erro: Chave mestra não fornecida.";
+                statusElement.classList.add('status-error');
+                return;
+            }
+            try {
+                const keyMaterial = new TextEncoder().encode(masterKeyInput);
+                const hashBuffer = await crypto.subtle.digest("SHA-256", keyMaterial);
+                masterKey = await crypto.subtle.importKey("raw", hashBuffer, "AES-GCM", false, ["encrypt", "decrypt"]);
+                logMessage("Chave mestra definida com sucesso.", 'success');
+                statusElement.textContent = "Chave mestra definida com sucesso.";
+                statusElement.classList.add('status-success');
+                document.getElementById("next-btn-1").disabled = false;
+ 
+                // Atualiza a Tabela do Servidor (poderia adicionar informações sobre a chave mestra, se necessário)
+                updateServerTable();
+ 
+                // Destaque no diagrama
+                highlightDiagram('masterKey');
+            } catch (error) {
+                logMessage("Erro ao definir a chave mestra: " + error.message, 'error');
+                statusElement.textContent = "Erro ao definir a chave mestra.";
+                statusElement.classList.add('status-error');
+            }
+        }
+ 
+        /**
+         * Gera o hash da senha utilizando PBKDF2.
+         * @param {string} password - A senha a ser hasheada.
+         * @param {Uint8Array} salt - O sal a ser utilizado.
+         * @returns {Object} - Contém o hash e o salt.
+         */
+        async function generatePasswordHash(password, salt = null) {
+            const encoder = new TextEncoder();
+            if (!salt) salt = crypto.getRandomValues(new Uint8Array(16));
+            const keyMaterial = await crypto.subtle.importKey("raw", encoder.encode(password), { name: "PBKDF2" }, false, ["deriveBits"]);
+            const derivedBits = await crypto.subtle.deriveBits({ name: "PBKDF2", salt: salt, iterations: 100000, hash: "SHA-256" }, keyMaterial, 256);
+            return { hash: derivedBits, salt: Array.from(salt) };
+        }
+ 
+        /**
+         * Validação da Etapa 1: Definir Chave Mestra
+         */
+        function validateStep1() {
+            // Não altera o estado aqui; habilitação ocorre após definição bem-sucedida
+        }
+ 
+        /**
+         * Validação da Etapa 2: Registrar Usuário e Enviar Dados
+         */
+        function validateStep2() {
+            // Não altera o estado aqui; habilitação ocorre após registro bem-sucedido
+        }
+ 
+        /**
+         * Validação da Etapa 3: Login de Usuário
+         */
+        function validateStep3() {
+            // Não altera o estado aqui; habilitação ocorre após login bem-sucedido
+        }
+ 
+        /**
+         * Validação da Etapa 4: Controle de Rotação Automática
+         */
+        function validateStep4() {
+            // Não altera o estado aqui; habilitação ocorre após configuração bem-sucedida
+        }
+ 
+        /**
+         * Registra um novo usuário e criptografa seus dados.
+         */
+        async function registerUser() {
+            const username = document.getElementById('reg-username').value.trim();
+            const password = document.getElementById('reg-password').value;
+            const userData = document.getElementById('user-data').value.trim();
+            const statusElement = document.getElementById("register-status");
+            statusElement.className = ''; // Resetar classes
+ 
+            // Validação dos campos
+            if (!username) {
+                logMessage("Erro: Nome de usuário não fornecido.", 'error');
+                statusElement.textContent = "Erro: Nome de usuário não fornecido.";
+                statusElement.classList.add('status-error');
+                return;
+            }
+            if (password.length < 8) {
+                logMessage("Erro: A senha deve ter pelo menos 8 caracteres.", 'error');
+                statusElement.textContent = "Erro: A senha deve ter pelo menos 8 caracteres.";
+                statusElement.classList.add('status-error');
+                return;
+            }
+            if (!userData) {
+                logMessage("Erro: Dados do usuário não fornecidos.", 'error');
+                statusElement.textContent = "Erro: Dados do usuário não fornecidos.";
+                statusElement.classList.add('status-error');
+                return;
+            }
+ 
+            if (userDB[username]) {
+                logMessage(`Erro: O usuário "${username}" já está registrado.`, 'error');
+                statusElement.textContent = `Erro: O usuário "${username}" já está registrado.`;
+                statusElement.classList.add('status-error');
+                return;
+            }
+ 
+            try {
+                const { hash: passwordHash, salt } = await generatePasswordHash(password);
+ 
+                const userCED = crypto.getRandomValues(new Uint8Array(32));
+                logMessage(`CED gerada para o usuário "${username}": ${Array.from(userCED).toString()}`, 'info');
+ 
+                const iv = crypto.getRandomValues(new Uint8Array(12));
+                const cedKey = await crypto.subtle.importKey("raw", userCED, "AES-GCM", false, ["encrypt", "decrypt"]);
+                const encryptedData = await crypto.subtle.encrypt({ name: "AES-GCM", iv: iv }, cedKey, new TextEncoder().encode(userData));
+                logMessage(`Dados do usuário "${username}" criptografados com a CED no backend: ${Array.from(new Uint8Array(encryptedData)).toString()}`, 'info');
+ 
+                const encryptedCED = await crypto.subtle.encrypt({ name: "AES-GCM", iv: iv }, masterKey, userCED);
+                logMessage(`CED criptografada para o usuário "${username}": ${Array.from(new Uint8Array(encryptedCED)).toString()}`, 'info');
+ 
+                userDB[username] = {
+                    salt,
+                    passwordHash: Array.from(new Uint8Array(passwordHash)),
+                    iv: Array.from(iv),
+                    encryptedData: Array.from(new Uint8Array(encryptedData)),
+                    encryptedCED: Array.from(new Uint8Array(encryptedCED))
+                };
+ 
+                logMessage(`Usuário "${username}" registrado com sucesso.`, 'success');
+                statusElement.textContent = `Usuário "${username}" registrado com sucesso.`;
+                statusElement.classList.add('status-success');
+ 
+                // Atualiza a tabela do servidor
+                updateServerTable();
+ 
+                // Habilita o próximo botão
+                document.getElementById("next-btn-2").disabled = false;
+ 
+                // Destaque no diagrama
+                highlightDiagram('registerUser');
+ 
+            } catch (error) {
+                logMessage("Erro ao registrar o usuário: " + error.message, 'error');
+                statusElement.textContent = "Erro ao registrar o usuário.";
+                statusElement.classList.add('status-error');
+            }
+        }
+ 
+        /**
+         * Realiza o login do usuário e gera um token temporário.
+         */
+        async function loginUser() {
+            const username = document.getElementById('login-username').value.trim();
+            const password = document.getElementById('login-password').value;
+            const statusElement = document.getElementById("login-status");
+            statusElement.className = ''; // Resetar classes
+ 
+            if (!username || !password) {
+                logMessage("Erro: Nome de usuário ou senha não fornecidos.", 'error');
+                statusElement.textContent = "Erro: Nome de usuário ou senha não fornecidos.";
+                statusElement.classList.add('status-error');
+                return;
+            }
+ 
+            const user = userDB[username];
+            if (!user) {
+                logMessage("Erro: Usuário não encontrado.", 'error');
+                statusElement.textContent = "Erro: Usuário não encontrado.";
+                statusElement.classList.add('status-error');
+                return;
+            }
+ 
+            try {
+                const { salt, passwordHash } = user;
+                const { hash: loginHash } = await generatePasswordHash(password, new Uint8Array(salt));
+                if (Array.from(new Uint8Array(loginHash)).toString() !== passwordHash.toString()) {
+                    logMessage("Erro: Senha incorreta.", 'error');
+                    statusElement.textContent = "Erro: Senha incorreta.";
+                    statusElement.classList.add('status-error');
+                    return;
+                }
+ 
+                const token = crypto.getRandomValues(new Uint8Array(16)).join("");
+                tokens[username] = { token, expires: Date.now() + tokenExpiryInterval };
+                logMessage(`Login bem-sucedido. Token gerado para o usuário "${username}": ${token}`, 'success');
+                statusElement.textContent = `Login bem-sucedido. Token gerado para "${username}".`;
+                statusElement.classList.add('status-success');
+ 
+                setTimeout(() => checkTokenExpiry(username), tokenExpiryInterval);
+                // Remover interval já existente para evitar múltiplos intervals
+                if (!autoRotationInterval) {
+                    setInterval(() => updateLoggedUsers(), 1000); // Atualiza o temporizador a cada segundo
+                }
+ 
+                const decryptedCED = await crypto.subtle.decrypt({ name: "AES-GCM", iv: new Uint8Array(user.iv) }, masterKey, new Uint8Array(user.encryptedCED));
+                const cedKey = await crypto.subtle.importKey("raw", decryptedCED, "AES-GCM", false, ["decrypt"]);
+                const decryptedData = await crypto.subtle.decrypt({ name: "AES-GCM", iv: new Uint8Array(user.iv) }, cedKey, new Uint8Array(user.encryptedData));
+ 
+                tokens[username].data = new TextDecoder().decode(decryptedData);
+                updateLoggedUsers();
+                logMessage(`Dados descriptografados para o usuário "${username}": ${tokens[username].data}`, 'info');
+ 
+                // Exibir o token no log também
+                logMessage(`Token gerado para o usuário "${username}": ${token}`, 'info');
+ 
+                // Habilita o próximo botão
+                document.getElementById("next-btn-3").disabled = false;
+ 
+                // Destaque no diagrama
+                highlightDiagram('loginUser');
+ 
+            } catch (error) {
+                logMessage("Erro ao realizar o login: " + error.message, 'error');
+                statusElement.textContent = "Erro ao realizar o login.";
+                statusElement.classList.add('status-error');
+            }
+        }
+ 
+        /**
+         * Desloga o usuário.
+         * @param {string} username - O nome do usuário a ser deslogado.
+         */
+        function logoutUser(username) {
+            if (tokens[username]) {
+                delete tokens[username];
+                logMessage(`Usuário "${username}" deslogado.`, 'info');
+                updateLoggedUsers();
+            } else {
+                logMessage(`Usuário "${username}" não está logado.`, 'error');
+            }
+        }
+ 
+        /**
+         * Inicia a rotação automática da chave mestra.
+         */
+        function startAutoRotation() {
+            const interval = parseInt(document.getElementById('rotation-interval').value, 10) * 1000;
+            const statusElement = document.getElementById("rotation-status");
+ 
+            if (isNaN(interval) || interval <= 0) {
+                logMessage("Erro: Intervalo de rotação inválido.", 'error');
+                statusElement.textContent = "Erro: Intervalo de rotação inválido.";
+                statusElement.classList.add('status-error');
+                return;
+            }
+ 
+            if (autoRotationInterval) {
+                logMessage("Rotação automática já está em execução.", 'error');
+                statusElement.textContent = "Rotação automática já está em execução.";
+                statusElement.classList.add('status-error');
+                return;
+            }
+            autoRotationInterval = setInterval(rotateMasterKey, interval);
+            logMessage(`Rotação automática iniciada (a cada ${interval / 1000} segundos).`, 'success');
+            statusElement.textContent = `Rotação automática iniciada (a cada ${interval / 1000} segundos).`;
+            statusElement.classList.add('status-success');
+ 
+            // Destaque no diagrama
+            highlightDiagram('autoRotation');
+        }
+ 
+        /**
+         * Para a rotação automática da chave mestra.
+         */
+        function stopAutoRotation() {
+            const statusElement = document.getElementById("rotation-status");
+            if (autoRotationInterval) {
+                clearInterval(autoRotationInterval);
+                autoRotationInterval = null;
+                logMessage("Rotação automática parada.", 'info');
+                statusElement.textContent = "Rotação automática parada.";
+                statusElement.classList.add('status-info');
+            } else {
+                logMessage("Rotação automática não está em execução.", 'error');
+                statusElement.textContent = "Rotação automática não está em execução.";
+                statusElement.classList.add('status-error');
+            }
+        }
+ 
+        /**
+         * Realiza a rotação da chave mestra e recriptografa as CEDs dos usuários.
+         */
+        async function rotateMasterKey() {
+            const newMasterKeyInput = crypto.getRandomValues(new Uint8Array(16)).join("");
+            try {
+                const keyMaterial = new TextEncoder().encode(newMasterKeyInput);
+                const hashBuffer = await crypto.subtle.digest("SHA-256", keyMaterial);
+ 
+                const newMasterKey = await crypto.subtle.importKey("raw", hashBuffer, "AES-GCM", false, ["encrypt", "decrypt"]);
+ 
+                logMessage("Iniciando a rotação da chave mestra...", 'info');
+ 
+                for (const username in userDB) {
+                    const user = userDB[username];
+                    logMessage(`CED criptografada com a chave antiga para o usuário "${username}": ${user.encryptedCED.toString()}`, 'info');
+                    const decryptedCED = await crypto.subtle.decrypt({ name: "AES-GCM", iv: new Uint8Array(user.iv) }, masterKey, new Uint8Array(user.encryptedCED));
+ 
+                    const reencryptedCED = await crypto.subtle.encrypt({ name: "AES-GCM", iv: new Uint8Array(user.iv) }, newMasterKey, decryptedCED);
+                    userDB[username].encryptedCED = Array.from(new Uint8Array(reencryptedCED));
+                    logMessage(`CED recriptografada com a nova chave para o usuário "${username}": ${Array.from(new Uint8Array(reencryptedCED)).toString()}`, 'info');
+                }
+ 
+                masterKey = newMasterKey;
+                logMessage("Rotação da chave mestra concluída com sucesso.", 'success');
+ 
+                // Atualiza a tabela do servidor após rotação
+                updateServerTable();
+ 
+                // Destaque no diagrama
+                highlightDiagram('rotateMasterKey');
+ 
+            } catch (error) {
+                logMessage("Erro ao rotacionar a chave mestra: " + error.message, 'error');
+            }
+        }
+ 
+        /**
+         * Verifica se o token do usuário expirou.
+         * @param {string} username - O nome do usuário.
+         */
+        function checkTokenExpiry(username) {
+            const userToken = tokens[username];
+            if (userToken && Date.now() > userToken.expires) {
+                logMessage(`Token para o usuário "${username}" expirou.`, 'info');
+                delete tokens[username];
+                updateLoggedUsers();
+            }
+        }
+ 
+        /**
+         * Navegação do Tutorial
+         */
+        function nextStep(current) {
+            if (current === 1 && masterKey) {
+                showStep(2);
+            }
+            if (current === 2 && userDB.hasOwnProperty(document.getElementById('reg-username').value.trim())) {
+                showStep(3);
+            }
+            if (current === 3 && tokens.hasOwnProperty(document.getElementById('login-username').value.trim())) {
+                showStep(4);
+            }
+            if (current === 4) {
+                finishTutorial();
+            }
+        }
+ 
+        function prevStep(current) {
+            if (current === 2) {
+                showStep(1);
+            }
+            if (current === 3) {
+                showStep(2);
+            }
+            if (current === 4) {
+                showStep(3);
+            }
+        }
+ 
+        function showStep(step) {
+            for (let i = 1; i <= totalSteps; i++) {
+                const stepElement = document.getElementById(`step-${i}`);
+                if (stepElement) {
+                    stepElement.classList.remove('active');
+                }
+            }
+            if (step <= totalSteps) {
+                const stepElement = document.getElementById(`step-${step}`);
+                if (stepElement) {
+                    stepElement.classList.add('active');
+                    currentStep = step;
+                }
+            }
+ 
+            // Ocultar botões de navegação após a conclusão
+            if (step === 4) {
+                // Após configurar a rotação, ocultar os botões de navegação linear
+                hideNavigationButtons();
+            }
+        }
+ 
+        /**
+         * Finaliza o tutorial e exibe a visão geral do backend.
+         */
+        function finishTutorial() {
+            // Remover todas as etapas ativas
+            document.querySelectorAll('.step').forEach(step => step.classList.remove('active'));
+            logMessage("Tutorial concluído. Visão geral do backend exibida.", 'info');
+ 
+            // Implementar função de finalização, como exibir um resumo ou reiniciar o tutorial
+            // Por exemplo, exibir um alerta confirmando a conclusão
+            alert("Tutorial concluído com sucesso!");
+ 
+            // Opcional: Reiniciar o tutorial após finalização
+            resetTutorial();
+        }
+ 
+        /**
+         * Reinicia o tutorial, limpando todos os dados e retornando para a primeira etapa.
+         */
+        function resetTutorial() {
+            // Limpar dados do usuário
+            for (const username in userDB) {
+                delete userDB[username];
+            }
+            // Limpar tokens
+            for (const username in tokens) {
+                delete tokens[username];
+            }
+            // Limpar tabela do servidor
+            updateServerTable();
+            // Limpar log
+            clearLog();
+            // Atualizar usuários logados
+            updateLoggedUsers();
+            // Resetar masterKey
+            masterKey = null;
+            // Resetar etapas
+            showStep(1);
+            // Habilitar novamente os botões de navegação linear
+            showNavigationButtons();
+            // Desabilitar botões de próximo
+            document.getElementById("next-btn-1").disabled = true;
+            document.getElementById("next-btn-2").disabled = true;
+            document.getElementById("next-btn-3").disabled = true;
+            document.getElementById("done-btn").disabled = true;
+            // Resetar campos de entrada
+            document.getElementById('master-key').value = '';
+            document.getElementById('reg-username').value = '';
+            document.getElementById('reg-password').value = '';
+            document.getElementById('user-data').value = '';
+            document.getElementById('login-username').value = '';
+            document.getElementById('login-password').value = '';
+            document.getElementById('rotation-interval').value = '';
+            // Remover qualquer rotação automática ativa
+            if (autoRotationInterval) {
+                clearInterval(autoRotationInterval);
+                autoRotationInterval = null;
+            }
+            // Remover destaques no diagrama
+            removeHighlights();
+            logMessage("Tutorial reiniciado pelo usuário.", 'info');
+        }
+ 
+        /**
+         * Destaca uma parte específica do diagrama.
+         * @param {string} action - A ação que desencadeia o destaque.
+         */
+        function highlightDiagram(action) {
+            const arrow = document.getElementById('arrow-flow');
+            switch(action) {
+                case 'masterKey':
+                    arrow.classList.add('highlight');
+                    setTimeout(() => arrow.classList.remove('highlight'), 2000);
+                    break;
+                case 'registerUser':
+                    arrow.classList.add('highlight');
+                    setTimeout(() => arrow.classList.remove('highlight'), 2000);
+                    break;
+                case 'loginUser':
+                    arrow.classList.add('highlight');
+                    setTimeout(() => arrow.classList.remove('highlight'), 2000);
+                    break;
+                case 'autoRotation':
+                    arrow.classList.add('highlight');
+                    setTimeout(() => arrow.classList.remove('highlight'), 2000);
+                    break;
+                case 'rotateMasterKey':
+                    arrow.classList.add('highlight');
+                    setTimeout(() => arrow.classList.remove('highlight'), 2000);
+                    break;
+                case 'overview':
+                    arrow.classList.remove('highlight');
+                    break;
+                default:
+                    break;
+            }
+        }
+ 
+        /**
+         * Remove todos os destaques no diagrama.
+         */
+        function removeHighlights() {
+            const arrow = document.getElementById('arrow-flow');
+            arrow.classList.remove('highlight');
+        }
+ 
+        /**
+         * Atualiza os temporizadores de expiração de token a cada segundo.
+         */
+        setInterval(() => {
+            const users = Object.keys(tokens);
+            users.forEach(username => {
+                const userToken = tokens[username];
+                if (userToken && Date.now() < userToken.expires) {
+                    const remaining = Math.round((userToken.expires - Date.now()) / 1000);
+                    // Atualiza o temporizador na sidebar direita
+                    const loggedUsersDiv = document.getElementById('logged-users');
+                    const userEntries = loggedUsersDiv.getElementsByTagName('p');
+                    for (let p of userEntries) {
+                        if (p.querySelector('strong') && p.querySelector('strong').textContent === username) {
+                            const timerSpan = p.querySelector('.timer');
+                            if (timerSpan) {
+                                timerSpan.textContent = `Expira em: ${remaining}s`;
+                            }
+                        }
+                    }
+                }
+            });
+        }, 1000);
+ 
+        /**
+         * Função para navegar diretamente para uma etapa específica.
+         * @param {string} stepId - O ID da etapa para navegar.
+         */
+        function navigateTo(stepId) {
+            const stepNumber = stepId.split('-')[1];
+            showStep(parseInt(stepNumber));
+        }
+ 
+        /**
+         * Função para resetar tudo (dados, logs, etc.).
+         */
+        function resetAll() {
+            if (confirm("Tem certeza que deseja resetar tudo? Isso irá limpar todos os dados e logs.")) {
+                resetTutorial();
+                logMessage("Todas as configurações e dados foram resetados.", 'info');
+            }
+        }
+ 
+        /**
+         * Função para esconder os botões de navegação linear após a configuração.
+         */
+        function hideNavigationButtons() {
+            document.querySelectorAll('.navigation-buttons').forEach(nav => {
+                nav.style.display = 'none';
+            });
+        }
+ 
+        /**
+         * Função para mostrar os botões de navegação linear ao reiniciar o tutorial.
+         */
+        function showNavigationButtons() {
+            document.querySelectorAll('.navigation-buttons').forEach(nav => {
+                nav.style.display = 'flex';
+            });
+        }
+    </script>
+</body>
+</html>
