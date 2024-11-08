@@ -12,7 +12,7 @@
             margin: 0;
             padding: 0;
         }
- 
+
         body {
             font-family: Arial, sans-serif;
             background-color: #f4f4f9;
@@ -22,7 +22,7 @@
             flex-direction: row;
             overflow: hidden;
         }
- 
+
         /* Sidebar Esquerda - Tabela do Servidor */
         .sidebar-left {
             flex: 0 0 25%; /* Aumentado para 25% para mais espaço */
@@ -37,6 +37,17 @@
         .sidebar-left h3 {
             color: #333;
             margin-bottom: 10px;
+            position: relative;
+        }
+        .sidebar-left .help-btn {
+            position: absolute;
+            top: 0;
+            right: 0;
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 1em;
+            color: #2196F3;
         }
         #server-table {
             width: 100%;
@@ -58,7 +69,7 @@
             overflow: auto;
             max-height: 100%; /* Garante que a tabela ocupe todo o espaço disponível */
         }
- 
+
         /* Main Content - Tutorial e Log */
         .main-content {
             flex: 1; /* Ocupa o espaço restante */
@@ -72,16 +83,32 @@
             color: #444;
             text-align: center;
             margin-bottom: 20px;
+            position: relative;
+        }
+        .main-content .help-btn {
+            position: absolute;
+            top: 0;
+            right: 20px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 1.2em;
+            color: #2196F3;
         }
         /* Diagrama de Fluxo de Dados */
         .flowchart {
-            flex: 0 0 100px; /* Altura reduzida para o diagrama */
+            flex: 0 0 120px; /* Ajustada a altura */
             width: 100%;
             text-align: center;
+            position: relative;
+            margin-bottom: 20px; /* Espaço entre o diagrama e as sessões */
         }
         .flowchart svg {
             width: 100%;
-            height: 100px; /* Altura fixa menor */
+            height: 120px; /* Altura ajustada */
+        }
+        .flowchart text {
+            font-size: 18px; /* Aumentado o tamanho da fonte */
         }
         /* Container para as Etapas do Tutorial */
         .steps-container {
@@ -98,6 +125,7 @@
             background-color: #fff;
             border-radius: 8px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            position: relative;
         }
         .step.active {
             display: block;
@@ -106,6 +134,9 @@
         .step h2 {
             color: #333;
             margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
         }
         .step p {
             margin-bottom: 15px;
@@ -118,6 +149,31 @@
         .step label {
             font-weight: bold;
             margin-bottom: 5px;
+            display: block;
+            position: relative;
+        }
+        .step .form-group {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+        .step .form-group .input-column {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            position: relative;
+        }
+        /* Posicionamento dos botões de ajuda acima dos inputs */
+        .step .form-group .input-column .help-btn {
+            position: absolute;
+            top: -10px;
+            right: 0;
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 1em;
+            color: #2196F3;
         }
         .step input {
             padding: 10px;
@@ -127,7 +183,15 @@
             transition: border-color 0.3s;
             width: 100%;
         }
-        .step input:focus {
+        .step select {
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 1em;
+            transition: border-color 0.3s;
+            width: 100%;
+        }
+        .step input:focus, .step select:focus {
             border-color: #2196F3;
             outline: none;
         }
@@ -174,12 +238,13 @@
         .navigation-buttons .prev-btn:hover {
             background-color: #ddd;
         }
-        .navigation-buttons .done-btn {
-            background-color: #2196F3;
+        /* Botão para parar rotatividade */
+        .navigation-buttons .stop-rotation-btn {
+            background-color: #f44336;
             color: white;
         }
-        .navigation-buttons .done-btn:hover {
-            background-color: #0b7dda;
+        .navigation-buttons .stop-rotation-btn:hover {
+            background-color: #da190b;
         }
         /* Log */
         .log-container {
@@ -235,6 +300,17 @@
         .sidebar-right h3 {
             color: #333;
             margin-bottom: 10px;
+            position: relative;
+        }
+        .sidebar-right .help-btn {
+            position: absolute;
+            top: 0;
+            right: 0;
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 1em;
+            color: #2196F3;
         }
         #logged-users {
             flex-grow: 1; /* Ocupa todo o espaço vertical disponível */
@@ -303,12 +379,35 @@
             cursor: pointer;
             box-shadow: 0 4px 6px rgba(0,0,0,0.1);
             transition: background-color 0.3s, transform 0.3s;
+            position: relative;
         }
         .floating-nav button:hover {
             background-color: #1976D2;
             transform: scale(1.1);
         }
- 
+        .floating-nav button.tooltip {
+            position: relative;
+        }
+        .floating-nav button.tooltip::after {
+            content: attr(data-tooltip);
+            position: absolute;
+            right: 60px;
+            top: 50%;
+            transform: translateY(-50%);
+            background-color: #333;
+            color: #fff;
+            padding: 5px 10px;
+            border-radius: 4px;
+            opacity: 0;
+            white-space: nowrap;
+            pointer-events: none;
+            transition: opacity 0.3s;
+            font-size: 0.9em;
+        }
+        .floating-nav button.tooltip:hover::after {
+            opacity: 1;
+        }
+
         /* Notificações Pop-up */
         .notification {
             position: fixed;
@@ -340,6 +439,10 @@
             from { opacity: 0; }
             to { opacity: 1; }
         }
+        @keyframes fadeOut {
+            from { opacity: 1; }
+            to { opacity: 0; }
+        }
         .highlight {
             stroke: #FF5722;
             stroke-width: 4;
@@ -361,6 +464,9 @@
             }
             .sidebar-left, .sidebar-right {
                 flex: 0 0 30%; /* Ajuste para dispositivos intermediários */
+            }
+            .step .form-group {
+                flex-direction: column;
             }
         }
         @media (max-width: 768px) {
@@ -401,13 +507,84 @@
                 height: 40px;
                 font-size: 20px;
             }
+            .step .form-group {
+                flex-direction: column;
+                gap: 15px;
+            }
+        }
+
+        /* Estilos para a Janela Modal */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+            backdrop-filter: blur(5px);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+            transition: opacity 0.3s ease-in-out, backdrop-filter 0.3s ease-in-out;
+        }
+        .modal-overlay.active {
+            display: flex;
+            opacity: 0;
+            animation: fadeInOverlay 0.3s forwards;
+        }
+        @keyframes fadeInOverlay {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        @keyframes fadeOutOverlay {
+            from { opacity: 1; }
+            to { opacity: 0; }
+        }
+        .modal {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            width: 90%;
+            max-width: 500px;
+            position: relative;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+            animation: fadeInModal 0.3s forwards;
+        }
+        @keyframes fadeInModal {
+            from { transform: scale(0.8); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+        @keyframes fadeOutModal {
+            from { transform: scale(1); opacity: 1; }
+            to { transform: scale(0.8); opacity: 0; }
+        }
+        .modal h3 {
+            margin-bottom: 15px;
+            color: #333;
+        }
+        .modal p {
+            color: #555;
+            margin-bottom: 10px;
+        }
+        .modal .close-btn {
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            background: none;
+            border: none;
+            font-size: 1.2em;
+            cursor: pointer;
+            color: #333;
         }
     </style>
 </head>
 <body>
     <!-- Sidebar Esquerda - Tabela do Servidor -->
     <div class="sidebar-left">
-        <h3>Tabela do Servidor</h3>
+        <h3>Tabela do Servidor
+            <button class="help-btn" onclick="openModal('server-table')">?</button>
+        </h3>
         <div class="table-container">
             <table id="server-table">
                 <thead>
@@ -428,63 +605,108 @@
             </table>
         </div>
     </div>
- 
+
     <!-- Main Content - Tutorial e Log -->
     <div class="main-content">
-        <h1>Simulação de Proteção de Dados</h1>
- 
+        <h1>Simulação de Proteção de Dados
+            <button class="help-btn" onclick="openModal('main-title')">?</button>
+        </h1>
+
         <!-- Diagrama de Fluxo de Dados -->
         <div class="flowchart">
             <svg viewBox="0 0 800 200" id="data-flow-diagram">
                 <!-- Frontend -->
-                <rect x="50" y="50" width="200" height="100" fill="#e3f2fd" stroke="#2196F3" stroke-width="2" rx="10"/>
-                <text x="150" y="80" text-anchor="middle" font-size="16" fill="#0d47a1">Frontend</text>
+                <rect x="50" y="20" width="200" height="100" fill="#e3f2fd" stroke="#2196F3" stroke-width="2" rx="10"/>
+                <text x="150" y="55" text-anchor="middle" fill="#0d47a1">Frontend</text>
                 <!-- Backend -->
-                <rect x="550" y="50" width="200" height="100" fill="#fff3e0" stroke="#ff9800" stroke-width="2" rx="10"/>
-                <text x="650" y="80" text-anchor="middle" font-size="16" fill="#e65100">Backend</text>
-                <!-- Arrow -->
-                <line x1="250" y1="100" x2="550" y2="100" stroke="#757575" stroke-width="2" marker-end="url(#arrowhead)" id="arrow-flow"/>
+                <rect x="550" y="20" width="200" height="100" fill="#fff3e0" stroke="#ff9800" stroke-width="2" rx="10"/>
+                <text x="650" y="55" text-anchor="middle" fill="#e65100">Backend</text>
+                <!-- Arrow Frontend para Backend -->
+                <line x1="250" y1="70" x2="550" y2="70" stroke="#757575" stroke-width="2" marker-end="url(#arrowhead)" id="arrow-flow"/>
+                <!-- Arrow Backend para Frontend -->
+                <line x1="550" y1="70" x2="250" y2="70" stroke="#757575" stroke-width="2" marker-start="url(#arrowhead)" class="arrow-back" id="arrow-flow-back"/>
                 <defs>
                     <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="0" refY="3.5" orient="auto">
                         <polygon points="0 0, 10 3.5, 0 7" fill="#757575"/>
                     </marker>
                 </defs>
                 <!-- Label -->
-                <text x="400" y="90" text-anchor="middle" font-size="14" fill="#757575">Fluxo de Dados</text>
+                <text x="400" y="65" text-anchor="middle" font-size="16" fill="#757575">Fluxo de Dados</text>
             </svg>
         </div>
- 
+
         <!-- Container para as Etapas do Tutorial -->
         <div class="steps-container">
-            <!-- Etapa 1: Definir Chave Mestra -->
+            <!-- Etapa 1: Definir Chave Mestra e Configurações -->
             <div id="step-1" class="step active">
-                <h2>1. Definir Chave Mestra</h2>
-                <p>Comece definindo uma chave mestra que será usada para proteger os dados dos usuários.</p>
-                <form onsubmit="event.preventDefault(); setMasterKey();">
-                    <label for="master-key">Chave Mestra:</label>
-                    <input type="password" id="master-key" placeholder="Digite a chave mestra" oninput="validateStep1()" required>
-                    <button type="submit" class="action-btn">Definir Chave Mestra</button>
+                <h2>1. Definir Chave Mestra e Configurações
+                    <button class="help-btn" onclick="openModal('step-1')">?</button>
+                </h2>
+                <p>Defina uma chave mestra para proteger os dados dos usuários e configure os intervalos de rotação e expiração dos tokens.</p>
+                <form onsubmit="event.preventDefault(); setMasterKeyAndConfig();">
+                    <div class="form-group">
+                        <div class="input-column">
+                            <label for="master-key">Rotação da KeyMaster:
+                                <button class="help-btn" onclick="openModal('master-key')">?</button>
+                            </label>
+                            <input type="password" id="master-key" placeholder="Digite a chave mestra" required>
+                        </div>
+                        <div class="input-column">
+                            <label for="rotation-interval">Rotação da KeyMaster:
+                                <button class="help-btn" onclick="openModal('rotation-interval')">?</button>
+                            </label>
+                            <input type="number" id="rotation-interval" placeholder="Ex: 60" min="10" value="60" required>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="input-column">
+                            <label for="token-expiration">Duração do Token:
+                                <button class="help-btn" onclick="openModal('token-expiration')">?</button>
+                            </label>
+                            <input type="number" id="token-expiration" placeholder="Ex: 30" min="10" value="30" required>
+                        </div>
+                    </div>
+                    <button type="submit" class="action-btn">Definir Configurações</button>
                 </form>
                 <p id="master-key-status"></p>
+                <div class="current-master-key" id="current-master-key" style="display: none;">
+                    <strong>Chave Mestra Atual:</strong> <span id="display-master-key"></span>
+                </div>
                 <div class="navigation-buttons">
                     <button class="next-btn" onclick="nextStep(1)" disabled id="next-btn-1">Próximo</button>
+                    <button class="stop-rotation-btn" onclick="stopAutoRotation()">Parar Rotatividade</button>
                 </div>
             </div>
- 
+
             <!-- Etapa 2: Registrar Usuário e Enviar Dados -->
             <div id="step-2" class="step">
-                <h2>2. Registrar Usuário e Enviar Dados</h2>
+                <h2>2. Registrar Usuário e Enviar Dados
+                    <button class="help-btn" onclick="openModal('step-2')">?</button>
+                </h2>
                 <p>Registre um novo usuário e envie dados para serem criptografados.</p>
                 <form onsubmit="event.preventDefault(); registerUser();">
-                    <label for="reg-username">Nome de Usuário:</label>
-                    <input type="text" id="reg-username" placeholder="Digite o nome de usuário" oninput="validateStep2()" required>
- 
-                    <label for="reg-password">Senha do Usuário:</label>
-                    <input type="password" id="reg-password" placeholder="Digite a senha do usuário" oninput="validateStep2()" required>
- 
-                    <label for="user-data">Dados para Criptografar:</label>
-                    <input type="text" id="user-data" placeholder="Digite a string para criptografar" oninput="validateStep2()" required>
- 
+                    <div class="form-group">
+                        <div class="input-column">
+                            <label for="reg-username">Nome de Usuário:
+                                <button class="help-btn" onclick="openModal('reg-username')">?</button>
+                            </label>
+                            <input type="text" id="reg-username" placeholder="Digite o nome de usuário" oninput="validateStep2()" required>
+                        </div>
+                        <div class="input-column">
+                            <label for="reg-password">Senha do Usuário:
+                                <button class="help-btn" onclick="openModal('reg-password')">?</button>
+                            </label>
+                            <input type="password" id="reg-password" placeholder="Digite a senha do usuário" oninput="validateStep2()" required>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="input-column">
+                            <label for="user-data">Dados para Criptografar:
+                                <button class="help-btn" onclick="openModal('user-data')">?</button>
+                            </label>
+                            <input type="text" id="user-data" placeholder="Digite a string para criptografar" oninput="validateStep2()" required>
+                        </div>
+                    </div>
                     <button type="submit" class="action-btn">Registrar Usuário</button>
                 </form>
                 <p id="register-status"></p>
@@ -493,49 +715,37 @@
                     <button class="next-btn" onclick="nextStep(2)" disabled id="next-btn-2">Próximo</button>
                 </div>
             </div>
- 
+
             <!-- Etapa 3: Login de Usuário -->
             <div id="step-3" class="step">
-                <h2>3. Login de Usuário</h2>
+                <h2>3. Login de Usuário
+                    <button class="help-btn" onclick="openModal('step-3')">?</button>
+                </h2>
                 <p>Faça login para gerar um token temporário e acessar seus dados criptografados.</p>
                 <form onsubmit="event.preventDefault(); loginUser();">
-                    <label for="login-username">Nome de Usuário:</label>
-                    <input type="text" id="login-username" placeholder="Digite o nome de usuário" oninput="validateStep3()" required>
- 
-                    <label for="login-password">Senha:</label>
-                    <input type="password" id="login-password" placeholder="Digite a senha" oninput="validateStep3()" required>
- 
+                    <div class="form-group">
+                        <div class="input-column">
+                            <label for="login-username">Nome de Usuário:
+                                <button class="help-btn" onclick="openModal('login-username')">?</button>
+                            </label>
+                            <input type="text" id="login-username" placeholder="Digite o nome de usuário" oninput="validateStep3()" required>
+                        </div>
+                        <div class="input-column">
+                            <label for="login-password">Senha:
+                                <button class="help-btn" onclick="openModal('login-password')">?</button>
+                            </label>
+                            <input type="password" id="login-password" placeholder="Digite a senha" oninput="validateStep3()" required>
+                        </div>
+                    </div>
                     <button type="submit" class="action-btn">Fazer Login</button>
                 </form>
                 <p id="login-status"></p>
                 <div class="navigation-buttons">
                     <button class="prev-btn" onclick="prevStep(3)">Anterior</button>
-                    <button class="next-btn" onclick="nextStep(3)" disabled id="next-btn-3">Próximo</button>
                 </div>
-            </div>
- 
-            <!-- Etapa 4: Controle de Rotação Automática da Chave Mestra -->
-            <div id="step-4" class="step">
-                <h2>4. Controle de Rotação Automática da Chave Mestra</h2>
-                <p>Configure a rotação automática da chave mestra para aumentar a segurança dos dados.</p>
-                <form onsubmit="event.preventDefault(); startAutoRotation();">
-                    <label for="rotation-interval">Tempo de Rotação (segundos):</label>
-                    <input type="number" id="rotation-interval" placeholder="Digite o tempo em segundos" oninput="validateStep4()" min="1" required>
- 
-                    <button type="submit" class="action-btn">Configurar Rotação</button>
-                </form>
-                <p id="rotation-status"></p>
-                <div class="navigation-buttons">
-                    <button class="prev-btn" onclick="prevStep(4)">Anterior</button>
-                    <button class="done-btn" onclick="finishTutorial()" disabled id="done-btn">Finalizar</button>
-                </div>
-                <!-- Botão para Parar a Rotação Automática -->
-                <button class="action-btn" onclick="stopAutoRotation()" style="margin-top: 10px; background-color: #f44336;">
-                    Parar Rotação Automática
-                </button>
             </div>
         </div>
- 
+
         <!-- Caixa de Log -->
         <div class="log-container">
             <h3>Log de Atividades</h3>
@@ -543,40 +753,147 @@
             <div id="log"></div>
         </div>
     </div>
- 
+
     <!-- Sidebar Direita - Usuários Logados -->
     <div class="sidebar-right">
-        <h3>Usuários Logados</h3>
+        <h3>Usuários Logados
+            <button class="help-btn" onclick="openModal('logged-users')">?</button>
+        </h3>
         <div id="logged-users">
             <p class="log-header">Nenhum usuário logado atualmente.</p>
         </div>
     </div>
- 
+
     <!-- Botões de Navegação Flutuantes com Ícones -->
     <div class="floating-nav">
-        <button onclick="navigateTo('step-2')" title="Registrar Novo Usuário">👤</button>
-        <button onclick="navigateTo('step-3')" title="Login">🔒</button>
-        <button onclick="navigateTo('step-4')" title="Configurar Rotação">⚙️</button>
-        <button onclick="resetAll()" title="Reset Completo">🔄</button>
+        <button onclick="navigateTo('step-1')" title="Configurações" data-tooltip="Configurações">⚙️</button>
+        <button onclick="navigateTo('step-2')" title="Registrar Novo Usuário" data-tooltip="Registrar Usuário">👤</button>
+        <button onclick="navigateTo('step-3')" title="Login" data-tooltip="Login">🔒</button>
+        <button onclick="resetAll()" title="Reset Completo" data-tooltip="Resetar Tutorial">🔄</button>
     </div>
- 
+
     <!-- Notificação Pop-up -->
     <div id="notification" class="notification"></div>
- 
+
+    <!-- Janela Modal -->
+    <div id="modal-overlay" class="modal-overlay">
+        <div class="modal">
+            <button class="close-btn" onclick="closeModal()">✖️</button>
+            <h3 id="modal-title">Ajuda</h3>
+            <p id="modal-content">Conteúdo da ajuda...</p>
+        </div>
+    </div>
+
     <!-- Scripts JavaScript -->
     <script>
         let currentStep = 1;
-        const totalSteps = 4;
+        const totalSteps = 3;
         let masterKey = null;
         const userDB = {};
         let autoRotationInterval = null;
+        let rotationIntervalTime = 60000; // 60 segundos padrão
+        let tokenExpiryInterval = 30000; // 30 segundos padrão
         const tokens = {};
-        const tokenExpiryInterval = 30 * 1000; // 30 segundos
- 
+
+        /**
+         * Abre a janela modal com o conteúdo específico.
+         * @param {string} context - O contexto da ajuda ('step-1', 'master-key', etc.).
+         */
+        function openModal(context) {
+            const modalOverlay = document.getElementById('modal-overlay');
+            const modalTitle = document.getElementById('modal-title');
+            const modalContent = document.getElementById('modal-content');
+
+            let title = 'Ajuda';
+            let content = 'Informação de ajuda não disponível.';
+
+            switch(context) {
+                case 'step-1':
+                    title = 'Configurações Iniciais';
+                    content = 'Nesta tela, você define a chave mestra que protegerá os dados dos usuários. Configure também os intervalos de rotação da chave mestra e a duração dos tokens de usuário.';
+                    break;
+                case 'master-key':
+                    title = 'Rotação da KeyMaster';
+                    content = 'Defina a chave mestra que será usada para criptografar os dados dos usuários. Esta chave deve ser forte e segura.';
+                    break;
+                case 'rotation-interval':
+                    title = 'Rotação da KeyMaster';
+                    content = 'Defina o intervalo de tempo (em segundos) após o qual a chave mestra será automaticamente rotacionada para aumentar a segurança.';
+                    break;
+                case 'token-expiration':
+                    title = 'Duração do Token';
+                    content = 'Defina o tempo (em segundos) de validade dos tokens de usuário. Tokens expirados exigem que o usuário faça login novamente.';
+                    break;
+                case 'step-2':
+                    title = 'Registrar Usuário';
+                    content = 'Nesta etapa, você pode registrar um novo usuário fornecendo um nome de usuário, senha e os dados que deseja criptografar.';
+                    break;
+                case 'reg-username':
+                    title = 'Nome de Usuário';
+                    content = 'Digite um nome de usuário único para o novo usuário. Este será usado para realizar login no sistema.';
+                    break;
+                case 'reg-password':
+                    title = 'Senha do Usuário';
+                    content = 'Digite uma senha segura para o usuário. A senha deve ter pelo menos 8 caracteres.';
+                    break;
+                case 'user-data':
+                    title = 'Dados para Criptografar';
+                    content = 'Insira os dados que serão criptografados e armazenados de forma segura no sistema.';
+                    break;
+                case 'step-3':
+                    title = 'Login de Usuário';
+                    content = 'Faça login com seu nome de usuário e senha para gerar um token temporário que permitirá acessar seus dados criptografados.';
+                    break;
+                case 'login-username':
+                    title = 'Nome de Usuário';
+                    content = 'Digite seu nome de usuário para realizar o login.';
+                    break;
+                case 'login-password':
+                    title = 'Senha';
+                    content = 'Digite sua senha para autenticar e gerar um token de acesso temporário.';
+                    break;
+                case 'server-table':
+                    title = 'Tabela do Servidor';
+                    content = 'Aqui estão listados todos os usuários registrados e seus respectivos detalhes de criptografia, como hash de senha, salt, IV, dados criptografados e CED criptografada.';
+                    break;
+                case 'logged-users':
+                    title = 'Usuários Logados';
+                    content = 'Veja a lista de usuários atualmente logados no sistema, juntamente com os tokens gerados e a duração restante dos tokens.';
+                    break;
+                case 'main-title':
+                    title = 'Simulação de Proteção de Dados';
+                    content = 'Esta aplicação simula um sistema de proteção de dados, permitindo registrar usuários, criptografar dados, gerenciar tokens e rotacionar chaves mestras automaticamente para garantir a segurança dos dados.';
+                    break;
+                default:
+                    title = 'Ajuda';
+                    content = 'Informação de ajuda não disponível.';
+            }
+
+            modalTitle.textContent = title;
+            modalContent.textContent = content;
+            modalOverlay.classList.add('active');
+        }
+
+        /**
+         * Fecha a janela modal com transição suave.
+         */
+        function closeModal() {
+            const modalOverlay = document.getElementById('modal-overlay');
+            const modal = document.querySelector('.modal');
+            modal.classList.add('fadeOutModal');
+            modalOverlay.classList.add('fadeOutOverlay');
+
+            // Após a animação, remove as classes
+            setTimeout(() => {
+                modal.classList.remove('active', 'fadeOutModal');
+                modalOverlay.classList.remove('active', 'fadeOutOverlay');
+            }, 300); // Tempo da animação em segundos
+        }
+
         /**
          * Exibe uma notificação pop-up.
          * @param {string} message - A mensagem da notificação.
-         * @param {string} type - Tipo da mensagem: 'success', 'error', 'info'.
+         * @param {string} type - Tipo da mensagem: 'success', 'error', 'info', 'critical'.
          */
         function showNotification(message, type) {
             const notification = document.getElementById('notification');
@@ -586,11 +903,11 @@
                 notification.className = 'notification';
             }, 3000);
         }
- 
+
         /**
          * Adiciona uma mensagem ao log com timestamp e colorização.
          * @param {string} message - A mensagem a ser adicionada.
-         * @param {string} type - Tipo da mensagem: 'success', 'error', 'info'.
+         * @param {string} type - Tipo da mensagem: 'success', 'error', 'info', 'critical'.
          */
         function logMessage(message, type = 'info') {
             const logDiv = document.getElementById('log');
@@ -598,14 +915,15 @@
             let color = '';
             if (type === 'success') color = 'green';
             else if (type === 'error') color = 'red';
+            else if (type === 'critical') color = '#FF5722'; // Laranja para operações críticas
             else color = '#555';
             logDiv.innerHTML += `<p style="color: ${color};"><strong>[${timestamp}]</strong> ${message}</p>`;
             logDiv.scrollTop = logDiv.scrollHeight;
- 
+
             // Exibe notificação
             showNotification(message, type);
         }
- 
+
         /**
          * Limpa o conteúdo do log.
          */
@@ -613,7 +931,7 @@
             document.getElementById('log').innerHTML = "";
             logMessage("Logs limpos pelo usuário.", 'info');
         }
- 
+
         /**
          * Atualiza a lista de usuários logados.
          */
@@ -647,14 +965,14 @@
                 });
             }
         }
- 
+
         /**
          * Atualiza a tabela simulada do servidor.
          */
         function updateServerTable() {
             const tableBody = document.querySelector('#server-table tbody');
             tableBody.innerHTML = ''; // Limpa a tabela
- 
+
             const users = Object.keys(userDB);
             if (users.length === 0) {
                 tableBody.innerHTML = `
@@ -664,7 +982,7 @@
                 `;
                 return;
             }
- 
+
             users.forEach(username => {
                 const user = userDB[username];
                 tableBody.innerHTML += `
@@ -679,21 +997,24 @@
                 `;
             });
         }
- 
+
         /**
-         * Define a chave mestra a partir do input do usuário.
+         * Define a chave mestra e configurações a partir do input do usuário.
          */
-        async function setMasterKey() {
+        async function setMasterKeyAndConfig() {
             const masterKeyInput = document.getElementById('master-key').value;
+            const rotationIntervalInput = parseInt(document.getElementById('rotation-interval').value, 10) * 1000; // Convertendo para ms
+            const tokenExpirationInput = parseInt(document.getElementById('token-expiration').value, 10) * 1000; // Convertendo para ms
             const statusElement = document.getElementById("master-key-status");
             statusElement.className = ''; // Resetar classes
- 
+
             if (!masterKeyInput) {
                 logMessage("Erro: Chave mestra não fornecida.", 'error');
                 statusElement.textContent = "Erro: Chave mestra não fornecida.";
                 statusElement.classList.add('status-error');
                 return;
             }
+
             try {
                 const keyMaterial = new TextEncoder().encode(masterKeyInput);
                 const hashBuffer = await crypto.subtle.digest("SHA-256", keyMaterial);
@@ -702,10 +1023,24 @@
                 statusElement.textContent = "Chave mestra definida com sucesso.";
                 statusElement.classList.add('status-success');
                 document.getElementById("next-btn-1").disabled = false;
- 
+
                 // Atualiza a Tabela do Servidor (poderia adicionar informações sobre a chave mestra, se necessário)
                 updateServerTable();
- 
+
+                // Exibe a chave mestra na seção atual
+                document.getElementById('current-master-key').style.display = 'block';
+                document.getElementById('display-master-key').textContent = masterKeyInput;
+
+                // Configura os intervalos
+                rotationIntervalTime = rotationIntervalInput;
+                tokenExpiryInterval = tokenExpirationInput;
+
+                logMessage(`Configuração de rotação automática definida para ${rotationIntervalTime / 1000} segundos.`, 'info');
+                logMessage(`Configuração de expiração de token definida para ${tokenExpiryInterval / 1000} segundos.`, 'info');
+
+                // Inicia a rotação automática
+                startAutoRotation();
+
                 // Destaque no diagrama
                 highlightDiagram('masterKey');
             } catch (error) {
@@ -714,7 +1049,7 @@
                 statusElement.classList.add('status-error');
             }
         }
- 
+
         /**
          * Gera o hash da senha utilizando PBKDF2.
          * @param {string} password - A senha a ser hasheada.
@@ -728,35 +1063,28 @@
             const derivedBits = await crypto.subtle.deriveBits({ name: "PBKDF2", salt: salt, iterations: 100000, hash: "SHA-256" }, keyMaterial, 256);
             return { hash: derivedBits, salt: Array.from(salt) };
         }
- 
+
         /**
-         * Validação da Etapa 1: Definir Chave Mestra
+         * Validação da Etapa 1: Definir Chave Mestra e Configurações
          */
         function validateStep1() {
             // Não altera o estado aqui; habilitação ocorre após definição bem-sucedida
         }
- 
+
         /**
          * Validação da Etapa 2: Registrar Usuário e Enviar Dados
          */
         function validateStep2() {
             // Não altera o estado aqui; habilitação ocorre após registro bem-sucedido
         }
- 
+
         /**
          * Validação da Etapa 3: Login de Usuário
          */
         function validateStep3() {
             // Não altera o estado aqui; habilitação ocorre após login bem-sucedido
         }
- 
-        /**
-         * Validação da Etapa 4: Controle de Rotação Automática
-         */
-        function validateStep4() {
-            // Não altera o estado aqui; habilitação ocorre após configuração bem-sucedida
-        }
- 
+
         /**
          * Registra um novo usuário e criptografa seus dados.
          */
@@ -766,7 +1094,7 @@
             const userData = document.getElementById('user-data').value.trim();
             const statusElement = document.getElementById("register-status");
             statusElement.className = ''; // Resetar classes
- 
+
             // Validação dos campos
             if (!username) {
                 logMessage("Erro: Nome de usuário não fornecido.", 'error');
@@ -786,28 +1114,28 @@
                 statusElement.classList.add('status-error');
                 return;
             }
- 
+
             if (userDB[username]) {
                 logMessage(`Erro: O usuário "${username}" já está registrado.`, 'error');
                 statusElement.textContent = `Erro: O usuário "${username}" já está registrado.`;
                 statusElement.classList.add('status-error');
                 return;
             }
- 
+
             try {
                 const { hash: passwordHash, salt } = await generatePasswordHash(password);
- 
+
                 const userCED = crypto.getRandomValues(new Uint8Array(32));
                 logMessage(`CED gerada para o usuário "${username}": ${Array.from(userCED).toString()}`, 'info');
- 
+
                 const iv = crypto.getRandomValues(new Uint8Array(12));
                 const cedKey = await crypto.subtle.importKey("raw", userCED, "AES-GCM", false, ["encrypt", "decrypt"]);
                 const encryptedData = await crypto.subtle.encrypt({ name: "AES-GCM", iv: iv }, cedKey, new TextEncoder().encode(userData));
                 logMessage(`Dados do usuário "${username}" criptografados com a CED no backend: ${Array.from(new Uint8Array(encryptedData)).toString()}`, 'info');
- 
+
                 const encryptedCED = await crypto.subtle.encrypt({ name: "AES-GCM", iv: iv }, masterKey, userCED);
                 logMessage(`CED criptografada para o usuário "${username}": ${Array.from(new Uint8Array(encryptedCED)).toString()}`, 'info');
- 
+
                 userDB[username] = {
                     salt,
                     passwordHash: Array.from(new Uint8Array(passwordHash)),
@@ -815,27 +1143,64 @@
                     encryptedData: Array.from(new Uint8Array(encryptedData)),
                     encryptedCED: Array.from(new Uint8Array(encryptedCED))
                 };
- 
+
                 logMessage(`Usuário "${username}" registrado com sucesso.`, 'success');
                 statusElement.textContent = `Usuário "${username}" registrado com sucesso.`;
                 statusElement.classList.add('status-success');
- 
+
                 // Atualiza a tabela do servidor
                 updateServerTable();
- 
+
                 // Habilita o próximo botão
                 document.getElementById("next-btn-2").disabled = false;
- 
+
+                // Exibir tooltip de finalização
+                showTooltip();
+
                 // Destaque no diagrama
                 highlightDiagram('registerUser');
- 
+
             } catch (error) {
                 logMessage("Erro ao registrar o usuário: " + error.message, 'error');
                 statusElement.textContent = "Erro ao registrar o usuário.";
                 statusElement.classList.add('status-error');
             }
         }
- 
+
+        /**
+         * Exibe um tooltip indicando que o usuário pode finalizar o tutorial.
+         */
+        function showTooltip() {
+            // Cria o tooltip
+            const tooltip = document.createElement('div');
+            tooltip.style.position = 'fixed';
+            tooltip.style.bottom = '20px';
+            tooltip.style.right = '80px';
+            tooltip.style.backgroundColor = '#333';
+            tooltip.style.color = '#fff';
+            tooltip.style.padding = '10px 20px';
+            tooltip.style.borderRadius = '5px';
+            tooltip.style.boxShadow = '0 0 10px rgba(0,0,0,0.2)';
+            tooltip.style.zIndex = '3000';
+            tooltip.style.opacity = '0';
+            tooltip.style.transition = 'opacity 0.3s';
+            tooltip.textContent = 'Clique no botão ⚙️ para finalizar o tutorial.';
+            document.body.appendChild(tooltip);
+
+            // Exibe o tooltip
+            setTimeout(() => {
+                tooltip.style.opacity = '1';
+            }, 100);
+
+            // Remove o tooltip após 5 segundos
+            setTimeout(() => {
+                tooltip.style.opacity = '0';
+                setTimeout(() => {
+                    document.body.removeChild(tooltip);
+                }, 300);
+            }, 5000);
+        }
+
         /**
          * Realiza o login do usuário e gera um token temporário.
          */
@@ -844,14 +1209,14 @@
             const password = document.getElementById('login-password').value;
             const statusElement = document.getElementById("login-status");
             statusElement.className = ''; // Resetar classes
- 
+
             if (!username || !password) {
                 logMessage("Erro: Nome de usuário ou senha não fornecidos.", 'error');
                 statusElement.textContent = "Erro: Nome de usuário ou senha não fornecidos.";
                 statusElement.classList.add('status-error');
                 return;
             }
- 
+
             const user = userDB[username];
             if (!user) {
                 logMessage("Erro: Usuário não encontrado.", 'error');
@@ -859,7 +1224,7 @@
                 statusElement.classList.add('status-error');
                 return;
             }
- 
+
             try {
                 const { salt, passwordHash } = user;
                 const { hash: loginHash } = await generatePasswordHash(password, new Uint8Array(salt));
@@ -869,43 +1234,40 @@
                     statusElement.classList.add('status-error');
                     return;
                 }
- 
+
                 const token = crypto.getRandomValues(new Uint8Array(16)).join("");
                 tokens[username] = { token, expires: Date.now() + tokenExpiryInterval };
                 logMessage(`Login bem-sucedido. Token gerado para o usuário "${username}": ${token}`, 'success');
                 statusElement.textContent = `Login bem-sucedido. Token gerado para "${username}".`;
                 statusElement.classList.add('status-success');
- 
+
                 setTimeout(() => checkTokenExpiry(username), tokenExpiryInterval);
                 // Remover interval já existente para evitar múltiplos intervals
                 if (!autoRotationInterval) {
                     setInterval(() => updateLoggedUsers(), 1000); // Atualiza o temporizador a cada segundo
                 }
- 
+
                 const decryptedCED = await crypto.subtle.decrypt({ name: "AES-GCM", iv: new Uint8Array(user.iv) }, masterKey, new Uint8Array(user.encryptedCED));
                 const cedKey = await crypto.subtle.importKey("raw", decryptedCED, "AES-GCM", false, ["decrypt"]);
                 const decryptedData = await crypto.subtle.decrypt({ name: "AES-GCM", iv: new Uint8Array(user.iv) }, cedKey, new Uint8Array(user.encryptedData));
- 
+
                 tokens[username].data = new TextDecoder().decode(decryptedData);
                 updateLoggedUsers();
                 logMessage(`Dados descriptografados para o usuário "${username}": ${tokens[username].data}`, 'info');
- 
+
                 // Exibir o token no log também
                 logMessage(`Token gerado para o usuário "${username}": ${token}`, 'info');
- 
-                // Habilita o próximo botão
-                document.getElementById("next-btn-3").disabled = false;
- 
+
                 // Destaque no diagrama
                 highlightDiagram('loginUser');
- 
+
             } catch (error) {
                 logMessage("Erro ao realizar o login: " + error.message, 'error');
                 statusElement.textContent = "Erro ao realizar o login.";
                 statusElement.classList.add('status-error');
             }
         }
- 
+
         /**
          * Desloga o usuário.
          * @param {string} username - O nome do usuário a ser deslogado.
@@ -919,54 +1281,35 @@
                 logMessage(`Usuário "${username}" não está logado.`, 'error');
             }
         }
- 
+
         /**
          * Inicia a rotação automática da chave mestra.
          */
         function startAutoRotation() {
-            const interval = parseInt(document.getElementById('rotation-interval').value, 10) * 1000;
-            const statusElement = document.getElementById("rotation-status");
- 
-            if (isNaN(interval) || interval <= 0) {
-                logMessage("Erro: Intervalo de rotação inválido.", 'error');
-                statusElement.textContent = "Erro: Intervalo de rotação inválido.";
-                statusElement.classList.add('status-error');
-                return;
-            }
- 
             if (autoRotationInterval) {
                 logMessage("Rotação automática já está em execução.", 'error');
-                statusElement.textContent = "Rotação automática já está em execução.";
-                statusElement.classList.add('status-error');
                 return;
             }
-            autoRotationInterval = setInterval(rotateMasterKey, interval);
-            logMessage(`Rotação automática iniciada (a cada ${interval / 1000} segundos).`, 'success');
-            statusElement.textContent = `Rotação automática iniciada (a cada ${interval / 1000} segundos).`;
-            statusElement.classList.add('status-success');
- 
+            autoRotationInterval = setInterval(rotateMasterKey, rotationIntervalTime);
+            logMessage(`Rotação automática iniciada (a cada ${rotationIntervalTime / 1000} segundos).`, 'success');
+
             // Destaque no diagrama
             highlightDiagram('autoRotation');
         }
- 
+
         /**
          * Para a rotação automática da chave mestra.
          */
         function stopAutoRotation() {
-            const statusElement = document.getElementById("rotation-status");
             if (autoRotationInterval) {
                 clearInterval(autoRotationInterval);
                 autoRotationInterval = null;
                 logMessage("Rotação automática parada.", 'info');
-                statusElement.textContent = "Rotação automática parada.";
-                statusElement.classList.add('status-info');
             } else {
                 logMessage("Rotação automática não está em execução.", 'error');
-                statusElement.textContent = "Rotação automática não está em execução.";
-                statusElement.classList.add('status-error');
             }
         }
- 
+
         /**
          * Realiza a rotação da chave mestra e recriptografa as CEDs dos usuários.
          */
@@ -975,35 +1318,38 @@
             try {
                 const keyMaterial = new TextEncoder().encode(newMasterKeyInput);
                 const hashBuffer = await crypto.subtle.digest("SHA-256", keyMaterial);
- 
+
                 const newMasterKey = await crypto.subtle.importKey("raw", hashBuffer, "AES-GCM", false, ["encrypt", "decrypt"]);
- 
-                logMessage("Iniciando a rotação da chave mestra...", 'info');
- 
+
+                logMessage("Iniciando a rotação da chave mestra...", 'critical');
+
                 for (const username in userDB) {
                     const user = userDB[username];
                     logMessage(`CED criptografada com a chave antiga para o usuário "${username}": ${user.encryptedCED.toString()}`, 'info');
                     const decryptedCED = await crypto.subtle.decrypt({ name: "AES-GCM", iv: new Uint8Array(user.iv) }, masterKey, new Uint8Array(user.encryptedCED));
- 
+
                     const reencryptedCED = await crypto.subtle.encrypt({ name: "AES-GCM", iv: new Uint8Array(user.iv) }, newMasterKey, decryptedCED);
                     userDB[username].encryptedCED = Array.from(new Uint8Array(reencryptedCED));
                     logMessage(`CED recriptografada com a nova chave para o usuário "${username}": ${Array.from(new Uint8Array(reencryptedCED)).toString()}`, 'info');
                 }
- 
+
                 masterKey = newMasterKey;
                 logMessage("Rotação da chave mestra concluída com sucesso.", 'success');
- 
+
                 // Atualiza a tabela do servidor após rotação
                 updateServerTable();
- 
+
+                // Exibe a nova chave mestra na seção de configurações
+                document.getElementById('display-master-key').textContent = newMasterKeyInput;
+
                 // Destaque no diagrama
                 highlightDiagram('rotateMasterKey');
- 
+
             } catch (error) {
                 logMessage("Erro ao rotacionar a chave mestra: " + error.message, 'error');
             }
         }
- 
+
         /**
          * Verifica se o token do usuário expirou.
          * @param {string} username - O nome do usuário.
@@ -1016,7 +1362,7 @@
                 updateLoggedUsers();
             }
         }
- 
+
         /**
          * Navegação do Tutorial
          */
@@ -1028,13 +1374,11 @@
                 showStep(3);
             }
             if (current === 3 && tokens.hasOwnProperty(document.getElementById('login-username').value.trim())) {
-                showStep(4);
-            }
-            if (current === 4) {
-                finishTutorial();
+                // Tooltip já exibido após registro, finalize com botão flutuante
+                // Habilitação do botão Finalizar removida
             }
         }
- 
+
         function prevStep(current) {
             if (current === 2) {
                 showStep(1);
@@ -1042,11 +1386,8 @@
             if (current === 3) {
                 showStep(2);
             }
-            if (current === 4) {
-                showStep(3);
-            }
         }
- 
+
         function showStep(step) {
             for (let i = 1; i <= totalSteps; i++) {
                 const stepElement = document.getElementById(`step-${i}`);
@@ -1061,14 +1402,24 @@
                     currentStep = step;
                 }
             }
- 
-            // Ocultar botões de navegação após a conclusão
-            if (step === 4) {
-                // Após configurar a rotação, ocultar os botões de navegação linear
-                hideNavigationButtons();
+
+            // Ajuste das setas no diagrama
+            adjustDiagramArrows(step);
+        }
+
+        /**
+         * Ajusta as setas do diagrama com base na etapa atual.
+         * @param {number} step - A etapa atual.
+         */
+        function adjustDiagramArrows(step) {
+            const arrowBack = document.getElementById('arrow-flow-back');
+            if (step === 3) { // Durante o login, mostrar seta de Backend para Frontend
+                arrowBack.classList.add('active');
+            } else {
+                arrowBack.classList.remove('active');
             }
         }
- 
+
         /**
          * Finaliza o tutorial e exibe a visão geral do backend.
          */
@@ -1076,15 +1427,15 @@
             // Remover todas as etapas ativas
             document.querySelectorAll('.step').forEach(step => step.classList.remove('active'));
             logMessage("Tutorial concluído. Visão geral do backend exibida.", 'info');
- 
+
             // Implementar função de finalização, como exibir um resumo ou reiniciar o tutorial
             // Por exemplo, exibir um alerta confirmando a conclusão
             alert("Tutorial concluído com sucesso!");
- 
+
             // Opcional: Reiniciar o tutorial após finalização
             resetTutorial();
         }
- 
+
         /**
          * Reinicia o tutorial, limpando todos os dados e retornando para a primeira etapa.
          */
@@ -1112,8 +1463,6 @@
             // Desabilitar botões de próximo
             document.getElementById("next-btn-1").disabled = true;
             document.getElementById("next-btn-2").disabled = true;
-            document.getElementById("next-btn-3").disabled = true;
-            document.getElementById("done-btn").disabled = true;
             // Resetar campos de entrada
             document.getElementById('master-key').value = '';
             document.getElementById('reg-username').value = '';
@@ -1121,7 +1470,10 @@
             document.getElementById('user-data').value = '';
             document.getElementById('login-username').value = '';
             document.getElementById('login-password').value = '';
-            document.getElementById('rotation-interval').value = '';
+            document.getElementById('rotation-interval').value = '60';
+            document.getElementById('token-expiration').value = '30';
+            document.getElementById('current-master-key').style.display = 'none';
+            document.getElementById('display-master-key').textContent = '';
             // Remover qualquer rotação automática ativa
             if (autoRotationInterval) {
                 clearInterval(autoRotationInterval);
@@ -1131,13 +1483,14 @@
             removeHighlights();
             logMessage("Tutorial reiniciado pelo usuário.", 'info');
         }
- 
+
         /**
          * Destaca uma parte específica do diagrama.
          * @param {string} action - A ação que desencadeia o destaque.
          */
         function highlightDiagram(action) {
             const arrow = document.getElementById('arrow-flow');
+            const arrowBack = document.getElementById('arrow-flow-back');
             switch(action) {
                 case 'masterKey':
                     arrow.classList.add('highlight');
@@ -1148,8 +1501,8 @@
                     setTimeout(() => arrow.classList.remove('highlight'), 2000);
                     break;
                 case 'loginUser':
-                    arrow.classList.add('highlight');
-                    setTimeout(() => arrow.classList.remove('highlight'), 2000);
+                    arrowBack.classList.add('highlight');
+                    setTimeout(() => arrowBack.classList.remove('highlight'), 2000);
                     break;
                 case 'autoRotation':
                     arrow.classList.add('highlight');
@@ -1161,20 +1514,23 @@
                     break;
                 case 'overview':
                     arrow.classList.remove('highlight');
+                    arrowBack.classList.remove('highlight');
                     break;
                 default:
                     break;
             }
         }
- 
+
         /**
          * Remove todos os destaques no diagrama.
          */
         function removeHighlights() {
             const arrow = document.getElementById('arrow-flow');
+            const arrowBack = document.getElementById('arrow-flow-back');
             arrow.classList.remove('highlight');
+            arrowBack.classList.remove('highlight');
         }
- 
+
         /**
          * Atualiza os temporizadores de expiração de token a cada segundo.
          */
@@ -1198,7 +1554,7 @@
                 }
             });
         }, 1000);
- 
+
         /**
          * Função para navegar diretamente para uma etapa específica.
          * @param {string} stepId - O ID da etapa para navegar.
@@ -1207,17 +1563,26 @@
             const stepNumber = stepId.split('-')[1];
             showStep(parseInt(stepNumber));
         }
- 
+
         /**
          * Função para resetar tudo (dados, logs, etc.).
          */
         function resetAll() {
             if (confirm("Tem certeza que deseja resetar tudo? Isso irá limpar todos os dados e logs.")) {
-                resetTutorial();
-                logMessage("Todas as configurações e dados foram resetados.", 'info');
+                // Abrir modal de confirmação de reset
+                openModal('reset-complete');
             }
         }
- 
+
+        /**
+         * Função para resetar tudo após confirmação no modal.
+         */
+        function confirmReset() {
+            resetTutorial();
+            logMessage("Todas as configurações e dados foram resetados.", 'info');
+            closeModal();
+        }
+
         /**
          * Função para esconder os botões de navegação linear após a configuração.
          */
@@ -1226,7 +1591,7 @@
                 nav.style.display = 'none';
             });
         }
- 
+
         /**
          * Função para mostrar os botões de navegação linear ao reiniciar o tutorial.
          */
@@ -1234,6 +1599,30 @@
             document.querySelectorAll('.navigation-buttons').forEach(nav => {
                 nav.style.display = 'flex';
             });
+        }
+
+        /**
+         * Modifica o comportamento do botão de reset para abrir um modal de confirmação.
+         */
+        function resetAll() {
+            openResetModal();
+        }
+
+        /**
+         * Abre o modal de confirmação de reset.
+         */
+        function openResetModal() {
+            const modalOverlay = document.getElementById('modal-overlay');
+            const modalTitle = document.getElementById('modal-title');
+            const modalContent = document.getElementById('modal-content');
+
+            modalTitle.textContent = 'Confirmar Reset Completo';
+            modalContent.innerHTML = `
+                <p>Tem certeza que deseja resetar tudo? Isso irá limpar todos os dados e logs.</p>
+                <button class="action-btn" onclick="confirmReset()">Sim, Resetar</button>
+                <button class="action-btn" onclick="closeModal()" style="background-color: #757575;">Cancelar</button>
+            `;
+            modalOverlay.classList.add('active');
         }
     </script>
 </body>
