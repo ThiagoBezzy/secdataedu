@@ -416,7 +416,7 @@
 
     /* Estilos para blocos de usuários logados */
     .user-block {
-      background-color: #f2f2f2;
+      background-color: #f2f2f2; /* Cinza do cabeçalho da tabela */
       border-radius: 8px;
       padding: 10px;
       margin-bottom: 10px;
@@ -426,127 +426,54 @@
       position: relative;
     }
 
-    /* Classes de cores diferentes para os blocos de usuários */
-    /*.color-1 {
-      background-color: #f2f2f2; /* Cinza Azul */
-    }*/
+    /* Container para alinhar nome do usuário e status horizontalmente */
+    .user-block .user-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 5px; /* Espaçamento abaixo do header */
+    }
 
-    /*.color-2 {
-      background-color: #f2f2f2; /* Verde Claro */
-    }*/
+    /* Container para alinhar "Expira em:" e o tempo horizontalmente */
+    .user-block .expires {
+      display: flex;
+      align-items: center;
+      margin-bottom: 5px; /* Espaçamento abaixo */
+    }
 
-    /*.color-3 {
-      background-color: #f2f2f2; /* Laranja Claro */
-    }*/
+    /* Espaçamento entre "Expira em:" e o tempo */
+    .user-block .expires strong {
+      margin-right: 5px; /* Espaço entre o texto e o contador */
+    }
 
-    /*.color-4 {
-      background-color: #f2f2f2; /* Roxo Claro */
-    }*/
+    /* Estilos para o temporizador */
+    .user-block .expires .timer {
+      font-size: 0.9em;
+      color: #555;
+      word-wrap: break-word;
+    }
 
-    /* Posicionar a bolinha à direita */
-.status-indicator {
-  width: 12px;
-  height: 12px;
-  border-radius: 50%;
-  display: inline-block;
-  margin-left: 95%; /* Espaço à esquerda da bolinha */
-  /* Remover posicionamento absoluto */
-  position: static;
-  transform: none;
-}
+    /* Ajuste da bolinha de status */
+    .status-indicator {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      display: inline-block;
+      margin-left: 0; /* Removido margin-left: 95% */
+      position: static;
+      transform: none;
+    }
 
-
+    /* Cores para status logado e deslogado */
     .status-logged-in {
-      background-color: #4CAF50;
+      background-color: #4CAF50; /* Verde */
     }
 
     .status-logged-out {
-      background-color: #f44336;
+      background-color: #f44336; /* Vermelho */
     }
 
-    /* Estilos para blocos de usuários logados */
-.user-block {
-  background-color: #f2f2f2; /* Cinza do cabeçalho da tabela */
-  border-radius: 8px;
-  padding: 10px;
-  margin-bottom: 10px;
-  display: flex;
-  flex-direction: column;
-  gap: 5px;
-}
-
-/* Container para alinhar nome do usuário e status horizontalmente */
-.user-block .user-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 5px; /* Espaçamento abaixo do header */
-}
-
-/* Container para alinhar "Expira em:" e o tempo horizontalmente */
-.user-block .expires {
-  display: flex;
-  align-items: center;
-  margin-bottom: 5px; /* Espaçamento abaixo */
-}
-
-/* Espaçamento entre "Expira em:" e o tempo */
-.user-block .expires strong {
-  margin-right: 5px; /* Espaço entre o texto e o contador */
-}
-
-/* Estilos para o temporizador */
-.user-block .expires .timer {
-  font-size: 0.9em;
-  color: #555;
-  word-wrap: break-word;
-}
-
-/* Ajuste da bolinha de status */
-.status-indicator {
-  width: 12px;
-  height: 12px;
-  border-radius: 50%;
-  display: inline-block;
-  margin-left: 0; /* Removido margin-left: 95% */
-  position: static;
-  transform: none;
-}
-
-/* Cores para status logado e deslogado */
-.status-logged-in {
-  background-color: #4CAF50; /* Verde */
-}
-
-.status-logged-out {
-  background-color: #f44336; /* Vermelho */
-}
-
-/* Ajustar display de strong dentro de user-block */
-.user-block strong {
-  display: block;
-  margin-bottom: 5px;
-}
-
-/* Botão de logout que ocupa toda a largura */
-.user-block button.action-btn {
-  width: 100%;
-  padding: 8px;
-  font-size: 0.9em;
-  background-color: #f44336;
-  border: none;
-  border-radius: 5px;
-  color: white;
-  cursor: pointer;
-  transition: background-color 0.3s;
-  margin-top: 10px;
-}
-
-.user-block button.action-btn:hover {
-  background-color: #da190b;
-}
-
-    /* Estilos para textos dentro dos blocos */
+    /* Ajustar display de strong dentro de user-block */
     .user-block strong {
       display: block;
       margin-bottom: 5px;
@@ -667,61 +594,7 @@
       }
     }
 
-    @keyframes fadeOut {
-      from {
-        opacity: 1;
-      }
-
-      to {
-        opacity: 0;
-      }
-    }
-
-    @keyframes fadeInOverlay {
-      from {
-        opacity: 0;
-      }
-
-      to {
-        opacity: 1;
-      }
-    }
-
-    @keyframes fadeOutOverlay {
-      from {
-        opacity: 1;
-        backdrop-filter: blur(5px);
-      }
-
-      to {
-        opacity: 0;
-        backdrop-filter: blur(0);
-      }
-    }
-
-    @keyframes fadeInModal {
-      from {
-        transform: scale(0.8);
-        opacity: 0;
-      }
-
-      to {
-        transform: scale(1);
-        opacity: 1;
-      }
-    }
-
-    @keyframes fadeOutModal {
-      from {
-        transform: scale(1);
-        opacity: 1;
-      }
-
-      to {
-        transform: scale(0.8);
-        opacity: 0;
-      }
-    }
+    /* Removidos @keyframes duplicados e desnecessários */
 
     .highlight {
       stroke: #FF5722;
@@ -823,17 +696,18 @@
       height: 100%;
       background-color: rgba(0, 0, 0, 0.5);
       backdrop-filter: blur(5px);
-      display: none;
+      opacity: 0;
+      visibility: hidden;
+      display: flex;
       align-items: center;
       justify-content: center;
       z-index: 2000;
-      transition: opacity 0.3s ease-in-out, backdrop-filter 0.3s ease-in-out;
+      transition: opacity 0.3s ease-in-out, visibility 0.3s ease-in-out;
     }
 
     .modal-overlay.active {
-      display: flex;
-      opacity: 0;
-      animation: fadeInOverlay 0.3s forwards;
+      opacity: 1;
+      visibility: visible;
     }
 
     .modal {
@@ -844,7 +718,14 @@
       max-width: 500px;
       position: relative;
       box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-      animation: fadeInModal 0.3s forwards;
+      transform: scale(0.8);
+      opacity: 0;
+      transition: transform 0.3s ease-in-out, opacity 0.3s ease-in-out;
+    }
+
+    .modal-overlay.active .modal {
+      transform: scale(1);
+      opacity: 1;
     }
 
     .modal h3 {
@@ -1114,14 +995,20 @@
     let tokenExpiryInterval = 30000; // 30 segundos padrão
     const tokens = {};
 
+    let lastFocusedElement; // Variável global para armazenar o último elemento focado
+
     /**
      * Abre a janela modal com o conteúdo específico.
      * @param {string} context - O contexto da ajuda ('step-1', 'master-key', etc.).
      */
     function openModal(context) {
       const modalOverlay = document.getElementById('modal-overlay');
+      const modal = document.querySelector('.modal');
       const modalTitle = document.getElementById('modal-title');
       const modalContent = document.getElementById('modal-content');
+
+      // Armazena o elemento que tinha foco antes de abrir a modal
+      lastFocusedElement = document.activeElement;
 
       let title = 'Ajuda';
       let content = 'Informação de ajuda não disponível.';
@@ -1198,22 +1085,27 @@
       modalTitle.textContent = title;
       modalContent.innerHTML = context === 'reset-complete' ? content : content;
       modalOverlay.classList.add('active');
+
+      // Foca no botão de fechar da modal após a animação de fade-in
+      setTimeout(() => {
+        document.querySelector('.modal .close-btn').focus();
+      }, 300); // Após a transição de 0.3s
     }
 
     /**
-     * Fecha a janela modal com transição suave.
+     * Fecha a janela modal com transição suave e retorna o foco.
      */
     function closeModal() {
       const modalOverlay = document.getElementById('modal-overlay');
       const modal = document.querySelector('.modal');
-      modal.classList.add('fadeOutModal');
-      modalOverlay.classList.add('fadeOutOverlay');
+      modalOverlay.classList.remove('active');
 
-      // Após a animação, remove as classes
+      // Após a transição, retorna o foco ao último elemento focado
       setTimeout(() => {
-        modal.classList.remove('active', 'fadeOutModal');
-        modalOverlay.classList.remove('active', 'fadeOutOverlay');
-      }, 500); // Tempo da animação em segundos
+        if (lastFocusedElement) {
+          lastFocusedElement.focus();
+        }
+      }, 300); // Tempo da transição em milissegundos
     }
 
     /**
@@ -1280,24 +1172,22 @@
             const decryptedData = userToken.data || 'Nenhum dado descriptografado.';
             loggedUsersDiv.innerHTML += `
               <div class="user-block ${colorClass}">
-  <!-- Container para nome do usuário e status -->
-  <div class="user-header">
-    <strong>${username}</strong>
-    <span class="status-indicator status-logged-in"></span>
-  </div>
-  
-  <strong>Dados Descriptografados:</strong> ${decryptedData}
-  
-  <!-- Container para "Expira em:" e o tempo -->
-  <div class="expires">
-    <strong>Expira em:</strong> <span class="timer">${remaining}s</span>
-  </div>
-  
-  <strong>Token:</strong> <span style="word-break: break-all;">${userToken.token}</span>
-  <button class="action-btn" onclick="logoutUser('${username}')">Logout</button>
-</div>
-
-
+                <!-- Container para nome do usuário e status -->
+                <div class="user-header">
+                  <strong>${username}</strong>
+                  <span class="status-indicator status-logged-in"></span>
+                </div>
+                
+                <strong>Dados Descriptografados:</strong> ${decryptedData}
+                
+                <!-- Container para "Expira em:" e o tempo -->
+                <div class="expires">
+                  <strong>Expira em:</strong> <span class="timer">${remaining}s</span>
+                </div>
+                
+                <strong>Token:</strong> <span style="word-break: break-all;">${userToken.token}</span>
+                <button class="action-btn" onclick="logoutUser('${username}')">Logout</button>
+              </div>
             `;
           }
         });
