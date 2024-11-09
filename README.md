@@ -6,3 +6,6 @@ Código completo para rodar em qualquer navegador, com responsividade em disposi
 O código tem um sistema simplificado, porém, num ambiente real, é indicado que se faça autenticação de 2 Fatores com aplicativo autenticador, para melhorar a segurança e confirmação de email.
 
 O código pode ser estudado, modificado, redistribuído, mas não pode ser vendido, pois o objetivo é apenas atender o público e educar
+
+Para testar, sem precisar baixar, experimente o link:
+https://simularprotecaodedados.playcode.io/
